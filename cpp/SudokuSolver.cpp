@@ -178,7 +178,7 @@ bool SudokuSolver::solveValue(int i) {
         return true;
     }
 
-    //std::cout << " i = " << i << std::endl;
+    std::cout << " i = " << i << std::endl;
 
     Point p = points[i];
 
@@ -186,7 +186,7 @@ bool SudokuSolver::solveValue(int i) {
     int y = p.y;
     int N = p.possibleValues.size();
 
-    //std::cout << "Checking values for Point (" << x << "," << y << ") with " << N << " possibilities" << std::endl;
+    std::cout << "Checking values for Point (" << x << "," << y << ") with " << N << " possibilities" << std::endl;
 
     if(N <= 0) return false;
 
@@ -195,10 +195,11 @@ bool SudokuSolver::solveValue(int i) {
 
         sudoku.numbers[x][y] = val;
 
-        //std::cout << "Test with value " << val << std::endl;
-        //std::cout << "line valid : " << (sudoku.lineIsValid(x) ? "true" : "false") << " ; column valid : " << (sudoku.columnIsValid(y)? "true" : "false") << " ; bloc valid : " << (sudoku.blocIsValid(x,y)? "true" : "false") << std::endl;
+        std::cout << "Test with value " << val << std::endl;
+        std::cout << "line valid : " << (sudoku.lineIsValid(x) ? "true" : "false") << " ; column valid : " << (sudoku.columnIsValid(y)? "true" : "false") << " ; bloc valid : " << (sudoku.blocIsValid(x,y)? "true" : "false") << std::endl;
 
         if(sudoku.lineIsValid(x) && sudoku.columnIsValid(y) && sudoku.blocIsValid(x, y)){
+            sudoku.display();
             //std::cout << "valid" << std::endl;
             //std::cout << " i+1 = " << i+1 << std::endl;
             if(solveValue(i+1)){

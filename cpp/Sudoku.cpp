@@ -49,7 +49,7 @@ bool Sudoku::lineIsValid(unsigned int idx) {
 
     for(int i = 0; i < 9; i++){
         int value = numbers[idx][i] - 1;
-        if(value <= 0) continue;
+        if(value < 0) continue;
         else mem[value]++;
         if(mem[value] > 1) {
             return false;
@@ -66,7 +66,7 @@ bool Sudoku::columnIsValid(unsigned int idx) {
         //std::string out = "Point (" + std::to_string(j) + "," + std::to_string(idx) + ") = " + std::to_string(value+1) + " (";
         //for(auto& v : mem) out += std::to_string(v);
         //std::cout << out << ") / ";
-        if(value <= 0) continue;
+        if(value < 0) continue;
         else mem[value]++;
         if(mem[value] > 1) {
             //std::string subout = "(";
@@ -100,7 +100,7 @@ bool Sudoku::blocIsValid(int x, int y) {
             int subY = originY + j;
             int value = numbers[subX][subY] - 1;
             //std::cout << "see value " << value << std::endl;
-            if(value <= 0) continue;
+            if(value < 0) continue;
             else mem[value]++;
             if(mem[value] > 1) return false;
         }
