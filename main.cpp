@@ -5,10 +5,6 @@
 
 /**
  * TODO
- * - nettoyer les cout
- * - ajouter l'option d'afficher les étapes au setup
- * - ajouter l'entrée user pour les sudoku
- * - commenter le code
  * - Passer en taille N
  */
 
