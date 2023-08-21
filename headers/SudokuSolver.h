@@ -10,13 +10,13 @@
 
 class SudokuSolver{
 public:
-    void Solve(Sudoku sud = nullptr);
+    void Solve(const Sudoku& sud, bool print = false);
 
     SudokuSolver();
     ~SudokuSolver();
 
     void displaySolution();
-    bool isSolved() const {return solved;};
+    [[nodiscard]] bool isSolved() const {return solved;};
 
 private:
     //Attributes
@@ -24,11 +24,12 @@ private:
     int numberBasePoints;
     std::vector<Point> points;
     bool solved;
+    bool printProcess;
 
     //Setup
     std::vector<Point> getPointsInOrder();
     int countPossibilities(int array[9][9][9],int i, int j);
-    Point getMinPossibility(int count[9][9]);
+    static Point getMinPossibility(int count[9][9]);
 
     //Solving
     bool solveValue(int i);

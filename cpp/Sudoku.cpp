@@ -4,7 +4,6 @@
 
 #include "Sudoku.h"
 #include <iostream>
-#include <string>
 
 Sudoku::Sudoku(int num[9][9]) {
     for(int i = 0; i < 9; i++){
@@ -15,16 +14,14 @@ Sudoku::Sudoku(int num[9][9]) {
 }
 
 Sudoku::Sudoku(){
-    for(int i = 0; i < 9; i++){
-        for(int j = 0; j < 9; j++){
-            numbers[i][j] = 0;
+    for(auto & line : numbers){
+        for(int & n : line){
+            n = 0;
         }
     }
 }
 
-Sudoku::~Sudoku() {
-
-}
+Sudoku::~Sudoku() = default;
 
 void Sudoku::display() {
     std::cout << "___________________" << std::endl;
@@ -60,22 +57,14 @@ bool Sudoku::lineIsValid(unsigned int idx) {
 
 bool Sudoku::columnIsValid(unsigned int idx) {
     int mem[9] = {0};
-    //std::cout << "\nElements in column" << std::endl;
-    for(int j = 0; j < 9; j++){
-        int value = numbers[j][idx] - 1;
-        //std::string out = "Point (" + std::to_string(j) + "," + std::to_string(idx) + ") = " + std::to_string(value+1) + " (";
-        //for(auto& v : mem) out += std::to_string(v);
-        //std::cout << out << ") / ";
+    for(auto & number : numbers){
+        int value = number[idx] - 1;
         if(value < 0) continue;
         else mem[value]++;
         if(mem[value] > 1) {
-            //std::string subout = "(";
-            //for(auto& v : mem) subout += std::to_string(v);
-            //std::cout << "\n" << value + 1 << " already found " << subout << ")" << std::endl;
             return false;
         }
     }
-    //std::cout << std::endl;
     return true;
 }
 
@@ -91,15 +80,12 @@ bool Sudoku::blocIsValid(int x, int y) {
     int originX = getBlocOriginX(x);
     int originY = getBlocOriginY(y);
 
-    //std::cout << "Checking bloc for " << x << "," << y << " ; origin = " << originX << "," << originY << std::endl;
-
     int mem[9] = {0};
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
             int subX = originX + i;
             int subY = originY + j;
             int value = numbers[subX][subY] - 1;
-            //std::cout << "see value " << value << std::endl;
             if(value < 0) continue;
             else mem[value]++;
             if(mem[value] > 1) return false;

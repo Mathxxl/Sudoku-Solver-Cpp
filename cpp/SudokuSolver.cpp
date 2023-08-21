@@ -5,17 +5,21 @@
 #include "SudokuSolver.h"
 #include <iostream>
 
-SudokuSolver::SudokuSolver() {}
+SudokuSolver::SudokuSolver() = default;
 
-SudokuSolver::~SudokuSolver() {}
+SudokuSolver::~SudokuSolver() = default;
 
-void SudokuSolver::Solve(Sudoku sud) {
+void SudokuSolver::Solve(const Sudoku& sud, bool print) {
         sudoku = sud;
+        printProcess = print;
 
         points = getPointsInOrder();
-        std::cout << "points : " << std::endl;
-        for(Point current : points){
-            std::cout << "(" << current.x << "," << current.y << ") ";
+
+        if(printProcess){
+            std::cout << "points : " << std::endl;
+            for(const Point& current : points){
+                std::cout << "(" << current.x << "," << current.y << ") ";
+            }
         }
 
         if(points.empty()) {
@@ -38,7 +42,7 @@ std::vector<Point> SudokuSolver::getPointsInOrder() {
     numberBasePoints = 0;
 
     //Set array of possibilities
-    std::cout << "Set array of possibilities" << std::endl;
+    if(printProcess) std::cout << "Set array of possibilities" << std::endl;
 
     int possibilities[9][9][9];
     for(int i =0; i < 9; i++){
@@ -54,17 +58,16 @@ std::vector<Point> SudokuSolver::getPointsInOrder() {
         }
     }
 
-    std::cout << "base points = " << numberBasePoints << std::endl;
+    if(printProcess) std::cout << "base points = " << numberBasePoints << std::endl;
 
     //Removals to get actual possibilities
-    std::cout << "Removals to get actual possibilities" << std::endl;
+    if(printProcess) std::cout << "Removals to get actual possibilities" << std::endl;
 
     for(int i = 0; i < 9; i++){
         for(int j = 0; j<9;j++){
                 int value = sudoku.numbers[i][j];
                 if(value <= 0) continue;
 
-                //std::cout << "Eliminate " << value << " for line " << i << std::endl;
                 //eliminate line
                 for(int x = 0; x < 9; x++){
                     if(x == j) continue;
@@ -72,7 +75,6 @@ std::vector<Point> SudokuSolver::getPointsInOrder() {
 
                 }
 
-                //std::cout << "Eliminate " << value << " for column " << j << std::endl;
                 //eliminate column
                 for(int y = 0; y < 9; y++){
                     if(y == i) continue;
@@ -81,10 +83,9 @@ std::vector<Point> SudokuSolver::getPointsInOrder() {
                 }
 
                 //eliminate bloc
-                int origX = sudoku.getBlocOriginX(i);
-                int origY = sudoku.getBlocOriginY(j);
+                int origX = Sudoku::getBlocOriginX(i);
+                int origY = Sudoku::getBlocOriginY(j);
 
-                //std::cout << "Eliminate " << value  << " from bloc " << origX << ":" << origY << std::endl;
 
                 for(int x = 0; x < 3; x++){
                     for(int y = 0; y < 3; y++){
@@ -96,30 +97,25 @@ std::vector<Point> SudokuSolver::getPointsInOrder() {
     }
 
     //Count possibilities
-    std::cout << "Count possibilities" << std::endl;
+    if(printProcess) std::cout << "Count possibilities" << std::endl;
 
     int count[9][9];
     for(int i = 0; i < 9; i++){
         for(int j = 0; j< 9; j++){
             count[i][j] = countPossibilities(possibilities, i, j);
-            //std::cout << "Point (" << i << "," << j << ") has " << count[i][j] << " possibilities" << std::endl;
          }
-    }
-
-    std::cout << "Count array : " << std::endl;
-    for(int i = 0; i < 9; i++){
-        for(int j = 0 ; j < 9; j++){
-            std::cout << count[i][j] << " ";
-        }
-        std::cout << std::endl;
     }
 
 
     //Set vector of min
-    std::cout << "Set vector of min" << std::endl;
+    if(printProcess) std::cout << "Set vector of min" << std::endl;
 
     int totalN = 81 - numberBasePoints;
-    std::cout << "total points = " << totalN << std::endl;
+
+    if(printProcess){
+        std::cout << "total points = " << totalN << std::endl;
+    }
+
     for(int a = 0; a < totalN; a++){
         Point min = getMinPossibility(count);
 
@@ -130,7 +126,7 @@ std::vector<Point> SudokuSolver::getPointsInOrder() {
 
         toReturn.push_back(min);
 
-        std::cout << "Add min Point (" << min.x << "," << min.y << ") with " << count[min.x][min.y] << " possibilities" << std::endl;
+        if(printProcess) std::cout << "Add min Point (" << min.x << "," << min.y << ") with " << count[min.x][min.y] << " possibilities" << std::endl;
 
         //remove min value
         count[min.x][min.y] = 101;
@@ -144,13 +140,15 @@ std::vector<Point> SudokuSolver::getPointsInOrder() {
 int SudokuSolver::countPossibilities(int array[9][9][9], int i, int j) {
     auto list = array[i][j];
     int count = 0;
-    std::cout << "Point (" << i << "," << j << ") = " << sudoku.numbers[i][j] << " possibilities are : ";
+    if(printProcess) std::cout << "Point (" << i << "," << j << ") = " << sudoku.numbers[i][j] << " possibilities are : ";
     for(int k = 0; k < 9; k++){
         int value = list[k];
-        if(value != 0)  std::cout << value;
+        if(value != 0)  {
+            if(printProcess) std::cout << value;
+        }
         if(value > 0) count++;
     }
-    std::cout << " ; count = " << count << std::endl;
+    if(printProcess) std::cout << " ; count = " << count << std::endl;
     return count;
 }
 
@@ -178,7 +176,7 @@ bool SudokuSolver::solveValue(int i) {
         return true;
     }
 
-    std::cout << " i = " << i << std::endl;
+    if(printProcess) std::cout << " i = " << i << std::endl;
 
     Point p = points[i];
 
@@ -186,7 +184,7 @@ bool SudokuSolver::solveValue(int i) {
     int y = p.y;
     int N = p.possibleValues.size();
 
-    std::cout << "Checking values for Point (" << x << "," << y << ") with " << N << " possibilities" << std::endl;
+    if(printProcess) std::cout << "Checking values for Point (" << x << "," << y << ") with " << N << " possibilities" << std::endl;
 
     if(N <= 0) return false;
 
@@ -195,22 +193,17 @@ bool SudokuSolver::solveValue(int i) {
 
         sudoku.numbers[x][y] = val;
 
-        std::cout << "Test with value " << val << std::endl;
-        std::cout << "line valid : " << (sudoku.lineIsValid(x) ? "true" : "false") << " ; column valid : " << (sudoku.columnIsValid(y)? "true" : "false") << " ; bloc valid : " << (sudoku.blocIsValid(x,y)? "true" : "false") << std::endl;
+        if(printProcess){
+            std::cout << "Test with value " << val << std::endl;
+            std::cout << "line valid : " << (sudoku.lineIsValid(x) ? "true" : "false") << " ; column valid : " << (sudoku.columnIsValid(y)? "true" : "false") << " ; bloc valid : " << (sudoku.blocIsValid(x,y)? "true" : "false") << std::endl;
+        }
 
         if(sudoku.lineIsValid(x) && sudoku.columnIsValid(y) && sudoku.blocIsValid(x, y)){
-            sudoku.display();
-            //std::cout << "valid" << std::endl;
-            //std::cout << " i+1 = " << i+1 << std::endl;
             if(solveValue(i+1)){
-                //std::cout << "next value valid" << std::endl;
                 return true;
             } else {
-                //std::cout << "next value invalid" << std::endl;
-                //std::cout << "on remonte à " << i << std::endl;
             }
         } else {
-            //sudoku.display();
         }
     }
 

@@ -10,18 +10,18 @@
 class Sudoku{
 public:
 
-    int numbers[9][9];
+    int numbers[9][9]{};
 
     Sudoku();
-    Sudoku(int num[9][9]);
+    explicit Sudoku(int num[9][9]);
     ~Sudoku();
 
     void display();
     bool lineIsValid(unsigned int idx);
     bool columnIsValid(unsigned int idx);
     bool blocIsValid(int x, int y);
-    int getBlocOriginX(int x);
-    int getBlocOriginY(int y);
+    static int getBlocOriginX(int x);
+    static int getBlocOriginY(int y);
 
 private:
 
