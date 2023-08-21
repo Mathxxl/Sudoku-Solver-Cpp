@@ -3,11 +3,6 @@
 
 #include "SudokuSolver.h"
 
-/**
- * TODO
- * - Passer en taille N
- */
-
 int main() {
 
     //Test Values
