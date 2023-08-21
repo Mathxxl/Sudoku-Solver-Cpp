@@ -20,22 +20,31 @@ int main() {
     bool displayProcess = false;
 
     std::string display_answer;
+    std::string filename;
+    bool validFile;
 
     //User Input
 
-    std::cout << "You may enter the Sudoku you want to solve : ";
+    std::cout << "You may enter the file destination of the Sudoku you want to solve (should be a text file with the lines of the sudoku) : ";
+    std::cin >> filename;
 
     std::cout << "\nDo you want to display to solving process (y/n) ? : ";
     std::cin >> display_answer;
     displayProcess = (display_answer == "y");
 
-    testSudoku.display();
 
     //Solving
 
     SudokuSolver solver;
 
-    solver.Solve(testSudoku, displayProcess);
+    validFile = solver.SolveFromFile(filename, displayProcess);
+
+    if(!validFile){
+        std::cout << "The file could not be read, solving test Sudoku instead" << std::endl;
+        testSudoku.display();
+        solver.Solve(testSudoku, displayProcess);
+    }
+
 
     //Display solution
 

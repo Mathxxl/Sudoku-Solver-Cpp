@@ -7,10 +7,12 @@
 
 #include "Sudoku.h"
 #include <vector>
+#include <string>
 
 class SudokuSolver{
 public:
     void Solve(const Sudoku& sud, bool print = false);
+    bool SolveFromFile(const std::string& filename, bool print=false);
 
     SudokuSolver();
     ~SudokuSolver();

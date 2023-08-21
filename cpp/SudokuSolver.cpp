@@ -4,6 +4,8 @@
 
 #include "SudokuSolver.h"
 #include <iostream>
+#include <fstream>
+#include <algorithm>
 
 SudokuSolver::SudokuSolver() = default;
 
@@ -213,4 +215,40 @@ bool SudokuSolver::solveValue(int i) {
 
 void SudokuSolver::displaySolution() {
     sudoku.display();
+}
+
+bool SudokuSolver::SolveFromFile(const std::string& filename, bool print) {
+    std::ifstream file;
+    file.open(filename);
+    int arr[9][9];
+    std::string line;
+
+    if(file.is_open()){
+
+        int i = 0;
+        while(std::getline(file, line)){
+            for(int j = 0; j < line.size(); j++){
+                unsigned char num = line[j];
+                int number = num - '0';
+                arr[i][j] = number;
+            }
+            i++;
+        }
+
+        Sudoku newSudoku(arr);
+
+        std::cout << "Input Sudoku : " << std::endl;
+        newSudoku.display();
+        Solve(newSudoku, print);
+
+        file.close();
+        return true;
+
+
+    } else {
+        std::cout << "Unable to open file " << filename << std::endl;
+        return false;
+    }
+
+
 }
